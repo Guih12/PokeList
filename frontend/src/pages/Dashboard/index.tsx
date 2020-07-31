@@ -1,5 +1,5 @@
 import React, {useState, FormEvent, useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 
 import logoPoke from '../../assets/LogoPoke.svg';
 import {Navbar, Container, Cardlist, Cardform, Error} from './styles';
@@ -18,6 +18,7 @@ const Dashboard: React.FC = ()=>{
 
     const [newPokemon, newSetPokemon] = useState('');
     const [error, setError] = useState('');
+    const history = useHistory();
     const [pokemons, setPokemons] = useState<Pokemons[]>([])
 
     async function handleAddPokemon(e: FormEvent<HTMLFormElement>): Promise<void>{
@@ -39,7 +40,10 @@ const Dashboard: React.FC = ()=>{
             setError('Erro ao buscar esse pokemon');
         }
     }
-
+    function handleLogout(){
+        localStorage.clear();
+        history.push('/login');
+    }
     useEffect(()=>{
         window.document.title= 'Dashboard'
     },[]);
@@ -48,7 +52,7 @@ const Dashboard: React.FC = ()=>{
         <>  
         <Navbar>
             <img src={logoPoke} alt="logo"/>
-            <Link to="/login">Sair</Link>
+            <Link to="/login"onClick={handleLogout}>Sair</Link>
         </Navbar>
 
         <Cardform>
