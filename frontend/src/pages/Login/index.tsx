@@ -4,6 +4,8 @@ import {useHistory} from 'react-router-dom';
 import { Container, Content } from './styles'
 import logoPoke from '../../assets/LogoPoke.svg';
 
+import backApi from '../../services/backApi';
+
 const LoginIn: React.FC = () => {
 
     const [email, setEmail] = useState('');
@@ -11,10 +13,17 @@ const LoginIn: React.FC = () => {
     const history = useHistory();
 
     async function handleAuthenticate(e: FormEvent<HTMLFormElement>): Promise<void> {
-        e.preventDefault();
-        console.log(email, password);
+        try {
+            e.preventDefault();
+            const response = await backApi.post(`authenticate`, {email, password});
 
-        history.push('/dashboard');
+            localStorage.setItem('name', response.data.name);
+
+            history.push('/dashboard');
+
+        } catch (error) {
+            alert('Usuário ou senha errado');
+        }
        
     }
     useEffect(()=>{
